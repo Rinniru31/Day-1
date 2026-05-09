@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Employee;
 class EmployeeController extends Controller
 {
     /**
@@ -15,7 +15,7 @@ class EmployeeController extends Controller
         try{
             $employees = Employee::all();
             //select * from employees;
-            return response()->json($employees);
+            return response()->json($employees, 200);
         }catch (\Exception $e) {
             return response()->json([
                 'message' => 'An error occured while fetching employees.',
@@ -38,7 +38,7 @@ class EmployeeController extends Controller
                 'gender' => 'nullable|string|max:10',
                 'birthday' => 'nullable|date',
                 'date_hired' => 'required|date',
-                'salary' => 'nullable|numieric'
+                'salary' => 'nullable|numeric'
 
             ]);
 
@@ -58,11 +58,9 @@ class EmployeeController extends Controller
      */
     public function show(string $id)
     {
-        //parameters: pagination, sorting, filtering
         try{
-            $employees = Employee::all();
-            //select * from employees;
-            return response()->json($employees);
+            $employee = Employee::FindOrFail($id);
+            return response()->json($employees,200);
         }catch (\Exception $e) {
             return response()->json([
                 'message' => 'No Records Available.',
@@ -76,11 +74,22 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //parameters: pagination, sorting, filtering
         try{
-            $employees = Employee::all();
-            //select * from employees;
-            return response()->json($employees);
+            $employee = Employee::FindOrFail($id);
+            
+            //validation
+            $validatedData= $request->validate([
+                'last_name' => 'required|string|max:100',
+                'first_name' => 'required|string|max:100',
+                'gender' => 'nullable|string|max:10',
+                'birthday' => 'nullable|date',
+                'date_hired' => 'required|date',
+                'salary' => 'nullable|numeric'
+
+            ]);
+
+            $employee->update($validatedData);
+            return response()->json($employee);
         }catch (\Exception $e) {
             return response()->json([
                 'message' => 'Update Failed.',
@@ -94,11 +103,13 @@ class EmployeeController extends Controller
      */
     public function destroy(string $id)
     {
-        //parameters: pagination, sorting, filtering
         try{
-            $employees = Employee::all();
-            //select * from employees;
-            return response()->json($employees);
+            $employee = Employee::FindOrFail($id);
+            $employee->delete();
+            return response()->json([
+                'message'=> 'Employee deleted successsfully.',
+                'employee_id'=> $id
+            ], 200);
         }catch (\Exception $e) {
             return response()->json([
                 'message' => 'An error occured while deleting employee.',

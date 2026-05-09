@@ -1,1 +1,30 @@
 GET http://localhost:8000/api/test
+###
+GET http://localhost:8000/api/employees
+###
+POST http://localhost:8000/api/employees
+Content-Type: application/json
+
+{
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john.doe@example.com",
+        "gender": "Male",
+        "birthday": "1990-01-01",
+        "date_hired": "2020-01-01",
+        "salary": 50000
+}
+###
+PUT http://localhost:8000/api/employees/1
+Content-Type: application/json
+
+{
+        "first_name": "John Ken",
+        "last_name": "Doe",
+        "gender": "Male",
+        "birthday": "1990-01-01",
+        "date_hired": "2020-01-01",
+        "salary": 50000
+}
+###
+DELETE http://localhost:8000/api/employees/1
